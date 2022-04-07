@@ -1,0 +1,22 @@
+{
+  "name": "staking-app",
+  "version": "1.0.0",
+  "description": "Blockchain stacking dApp",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kchn9/staking-app.git"
+  },
+  "author": "kchn9",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kchn9/staking-app/issues"
+  },
+  "homepage": "https://github.com/kchn9/staking-app#readme"
+}
