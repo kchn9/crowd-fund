@@ -9,6 +9,9 @@ contract Staker {
     /// @notice Event used to allow dApp frontend keep track of stake changes
     event Stake(address stakingUser, uint amount);
 
+    /// @notice Keeping an eye on withdrawals
+    event Withdrawal(address who, uint amount);
+
     /// @notice Amount of time the user has to stake ETH to earn 
     uint constant DEADLINE_TIME = 60 seconds;
     uint deadline = block.timestamp + DEADLINE_TIME;
@@ -25,11 +28,20 @@ contract Staker {
     /// @notice Bool allowing users to withdraw if threshold was not exceeded
     bool openForWithdraw = false;
 
-    /**
-     * @notice Getter for current contract balance - mostly for test purposes
-     */
+    /// @notice Getter for current contract balance - mostly for test purposes
     function getBalance() public view returns(uint256) {
         return address(this).balance;
+    }
+
+    /**
+     * @notice Getter to keep eye on how much time left before staking ends - mostly for test purposes
+     */
+    function getTimeLeft() public view returns(uint256) {
+        if (block.timestamp > deadline) {
+            return block.timestamp - deadline;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -61,6 +73,7 @@ contract Staker {
 
     /**
      * @notice Allows users to withdraw their funds if staking phase is over
+     * @dev Emits Withdrawal event
      */
     function withdraw() public {
         require(openForWithdraw, "Staker: Contract is not open for withdraw - staking continues");
@@ -70,7 +83,7 @@ contract Staker {
         balances[to] -= toWithdraw;
         (bool success, ) = to.call{ value: toWithdraw }("");
         require(success, "Staker: Withdraw failed");
+        emit Withdrawal(to, toWithdraw);
     }
-
 
 }
