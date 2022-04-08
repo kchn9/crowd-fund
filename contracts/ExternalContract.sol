@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 /**
- * Example of representation of any external contract that receives stacked funds
+ * Example of representation of any external stake-holding contract 
+ * that receives stacked funds and then emits Complete(uint) event
  */
 contract ExternalContract {
     /// @notice Event to keep eye on process completion

@@ -11,10 +11,16 @@ contract Staker {
     /// @notice Event used to allow dApp frontend keep track of stake changes
     event Stake(address stakingUser, uint amount);
 
+    /// @notice Emited when users are allowed to withdraw their funds
+    event Open();
+
     /// @notice Keeping an eye on withdrawals
     event Withdrawal(address who, uint amount);
 
-    /// @notice Representation of any external contract
+    /// @notice Keeps track of sent Stake to external stake-holding contract
+    event StakeSent(address externalAddress, uint amount);
+
+    /// @notice Representation of any external stake-holding contract
     ExternalContract example = new ExternalContract();
 
     /// @notice Amount of time the user has to stake ETH to earn 
@@ -42,8 +48,8 @@ contract Staker {
      * @notice Getter to keep eye on how much time left before staking ends - mostly for test purposes
      */
     function getTimeLeft() public view returns(uint256) {
-        if (block.timestamp > deadline) {
-            return block.timestamp - deadline;
+        if (deadline > block.timestamp) {
+            return deadline - block.timestamp;
         } else {
             return 0;
         }
@@ -63,15 +69,18 @@ contract Staker {
     /**
      * @notice Checks if staking time is up, checks if treshold is exceeded - if so it send money to external contract,
      * if not it allow users to withdraw their coins. It may be called only once.
+     * @dev Emits either StakeSent(address, uint) or Open() events, depends if threshold is exceeded
      */
     function execute() public {
         require(block.timestamp >= deadline, "Staker: The deadline is not over yet");
         require(!wasExecuted, "Staker: Contract has been executed already");
-        if (this.getBalance() > THRESHOLD) {
-            
+        if (this.getBalance() >= THRESHOLD) {
+            emit StakeSent(address(example), this.getBalance());
+            example.complete{ value: this.getBalance() }();
         } else {
             openForWithdraw = true;
             wasExecuted = true;
+            emit Open();
         }
     }
 
@@ -89,5 +98,4 @@ contract Staker {
         require(success, "Staker: Withdraw failed");
         emit Withdrawal(to, toWithdraw);
     }
-
 }
