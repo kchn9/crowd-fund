@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "./ExternalContract.sol";
+
 /**
  * Core contract of decentralized staking app, provides basic mechanism of Ether stacking
  * @author kchn9
@@ -11,6 +13,9 @@ contract Staker {
 
     /// @notice Keeping an eye on withdrawals
     event Withdrawal(address who, uint amount);
+
+    /// @notice Representation of any external contract
+    ExternalContract example = new ExternalContract();
 
     /// @notice Amount of time the user has to stake ETH to earn 
     uint constant DEADLINE_TIME = 60 seconds;
@@ -63,12 +68,11 @@ contract Staker {
         require(block.timestamp >= deadline, "Staker: The deadline is not over yet");
         require(!wasExecuted, "Staker: Contract has been executed already");
         if (this.getBalance() > THRESHOLD) {
-            // call external contract
+            
         } else {
             openForWithdraw = true;
             wasExecuted = true;
         }
-
     }
 
     /**
