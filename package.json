@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/kchn9/staking-app/issues"
   },
-  "homepage": "https://github.com/kchn9/staking-app#readme"
+  "homepage": "https://github.com/kchn9/staking-app#readme",
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.15"
+  }
 }
