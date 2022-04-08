@@ -28,4 +28,12 @@ contract Staker {
         balances[msg.sender] += msg.value;
         emit Stake(msg.sender, msg.value);
     }
+
+    /**
+     * @notice Getter for current contract balance - mostly for test purposes
+     */
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
+    }
+
 }
