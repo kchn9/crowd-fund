@@ -67,6 +67,15 @@ contract Staker {
     }
 
     /**
+     * @dev Fallback function for ETH that been sent directionally
+     */
+    receive() external payable {
+        require(block.timestamp < deadline, "Staker: Staking phase is over already");
+        balances[msg.sender] += msg.value;
+        emit Stake(msg.sender, msg.value);
+    }
+
+    /**
      * @notice Checks if staking time is up, checks if treshold is exceeded - if so it send money to external contract,
      * if not it allow users to withdraw their coins. It may be called only once.
      * @dev Emits either StakeSent(address, uint) or Open() events, depends if threshold is exceeded
