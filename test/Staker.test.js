@@ -1,5 +1,4 @@
 const { time, expectRevert, expectEvent } = require("@openzeppelin/test-helpers");
-
 const Staker = artifacts.require("./Staker.sol");
 
 contract("Staker contract", async accounts => {
@@ -139,11 +138,28 @@ contract("Staker contract", async accounts => {
     it("should reject withdraw() for someone who has not participated in staking", async () => {
         await instance.stake({ from: alice, value: web3.utils.toWei("20", "finney") });
         await time.increase(timeToStakeOver);
-        await instance.execute() // open to withdrawal
+        await instance.execute(); // open to withdrawal
         await expectRevert(
             instance.withdraw({ from: bob }), // bob not participated!
             "Staker: No funds to withdraw",
         )
     })
 
+    it("should reject receiving any funds after executing through (1) stake()", async () => {
+        await time.increase(timeToStakeOver);
+        await instance.execute();
+        await expectRevert(
+            instance.stake({ from: alice, value: 1000 }),
+            "Staker: Stake no longer accepts any funds"
+        )
+    })
+
+    it("should reject receiving any funds after executing through (2) receive() fallback", async () => {
+        await time.increase(timeToStakeOver);
+        await instance.execute();
+        await expectRevert(
+            instance.sendTransaction({ from: alice, value: 1000}),
+            "Staker: Stake no longer accepts any funds"
+        )
+    })
 })
