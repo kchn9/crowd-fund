@@ -89,7 +89,7 @@ contract Staker {
      * @dev Emits Withdrawal event
      */
     function withdraw() public {
-        require(openForWithdraw, "Staker: Contract is not open for withdraw - staking continues");
+        require(openForWithdraw, "Staker: Contract is not open for withdraw - staking continues / threshold reached");
         address payable to = payable(msg.sender);
         uint toWithdraw = balances[to];
         require(toWithdraw > 0, "Staker: No funds to withdraw");
