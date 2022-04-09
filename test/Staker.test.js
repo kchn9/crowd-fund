@@ -150,7 +150,7 @@ contract("Staker contract", async accounts => {
         await instance.execute();
         await expectRevert(
             instance.stake({ from: alice, value: 1000 }),
-            "Staker: Stake no longer accepts any funds"
+            "Staker: Staking phase is over already"
         )
     })
 
@@ -159,7 +159,7 @@ contract("Staker contract", async accounts => {
         await instance.execute();
         await expectRevert(
             instance.sendTransaction({ from: alice, value: 1000}),
-            "Staker: Stake no longer accepts any funds"
+            "Staker: Staking phase is over already"
         )
     })
 })

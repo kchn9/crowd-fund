@@ -39,6 +39,12 @@ contract Staker {
     /// @notice Bool allowing users to withdraw if threshold was not exceeded
     bool openForWithdraw = false;
 
+    /// @notice Access modifier to allow call functions only before stacking is over
+    modifier stakingOnly() {
+        require(block.timestamp < deadline, "Staker: Staking phase is over already");
+        _;
+    }
+
     /// @notice Getter for current contract balance - mostly for test purposes
     function getBalance() public view returns(uint256) {
         return address(this).balance;
@@ -59,9 +65,8 @@ contract Staker {
      * @notice Stakes user funds to this contract balance
      * @dev Emits Stake event
      */
-    function stake() external payable {
+    function stake() external payable stakingOnly {
         require(msg.value > 0, "Staker: User is not staking any ETH");
-        require(block.timestamp < deadline, "Staker: Staking phase is over already");
         balances[msg.sender] += msg.value;
         emit Stake(msg.sender, msg.value);
     }
@@ -69,8 +74,7 @@ contract Staker {
     /**
      * @dev Fallback function for ETH that been sent directionally
      */
-    receive() external payable {
-        require(block.timestamp < deadline, "Staker: Staking phase is over already");
+    receive() external payable stakingOnly {
         balances[msg.sender] += msg.value;
         emit Stake(msg.sender, msg.value);
     }
@@ -101,8 +105,10 @@ contract Staker {
         require(openForWithdraw, "Staker: Contract is not open for withdraw - staking continues / threshold reached");
         address payable to = payable(msg.sender);
         uint toWithdraw = balances[to];
+
         require(toWithdraw > 0, "Staker: No funds to withdraw");
         balances[to] -= toWithdraw;
+
         (bool success, ) = to.call{ value: toWithdraw }("");
         require(success, "Staker: Withdraw failed");
         emit Withdrawal(to, toWithdraw);
