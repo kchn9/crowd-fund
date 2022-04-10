@@ -65,7 +65,7 @@ contract Staker {
      * @notice Stakes user funds to this contract balance
      * @dev Emits Stake event
      */
-    function stake() external payable stakingOnly {
+    function stake() public payable stakingOnly {
         require(msg.value > 0, "Staker: User is not staking any ETH");
         balances[msg.sender] += msg.value;
         emit Stake(msg.sender, msg.value);
