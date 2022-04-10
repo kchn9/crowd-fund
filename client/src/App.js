@@ -35,8 +35,11 @@ export const App = () => {
 
   return (
     <section className="App">
-      <h1 style={{ textAlign: "center" }}>
+      <small style={{ display: "block", marginTop: "12px", textAlign: "center", color: "yellowgreen"}}>
         Connection established!
+      </small>
+      <h1 style={{ textAlign: "center" }}>
+        More coming soon...
       </h1>
     </section>
   )
