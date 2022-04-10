@@ -74,9 +74,8 @@ contract Staker {
     /**
      * @dev Fallback function for ETH that been sent directionally
      */
-    receive() external payable stakingOnly {
-        balances[msg.sender] += msg.value;
-        emit Stake(msg.sender, msg.value);
+    receive() external payable {
+        stake();
     }
 
     /**
