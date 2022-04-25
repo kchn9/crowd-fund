@@ -36,6 +36,12 @@ contract CrowdFund {
     /// @notice The minimum amount of ETH that must be collected by founders to 
     uint immutable _THRESHOLD;
 
+    /**
+     * @notice Creates new crowd funding
+     * @param _duration sets time of funding
+     * @param _threshold sets Wei goal of funding
+     * @param _receiver address which will receive funds after successful funding
+     */
     constructor(uint _duration, uint _threshold, address _receiver) {
         require(_receiver != address(0), "CrowdFund: Fundraising receiver cannot be address 0.");
         require(_duration <= MAX_DURATION, "CrowdFund: FundDuration must not exceed 90 days.");
