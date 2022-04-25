@@ -1,5 +1,5 @@
-var Staker = artifacts.require("./Staker.sol");
+var CrowdFund = artifacts.require("./CrowdFund.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Staker);
+  deployer.deploy(CrowdFund);
 };
