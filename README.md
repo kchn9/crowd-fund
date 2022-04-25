@@ -1,1 +1,1 @@
-# staking-app
+# crowd-fund-app
